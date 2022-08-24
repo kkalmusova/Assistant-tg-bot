@@ -9,7 +9,7 @@ import (
 
 func main() {
 	// создаем бота по токену (здесь токен заменен строкой в целях безопасности)
-	bot, err := tgbotapi.NewBotAPI("5703665093:AAF_VZELQd7gZ_c_HQqcUexW8y6MC6iYyJk")
+	bot, err := tgbotapi.NewBotAPI("TOKEN")
 	if err != nil {
 		log.Panic(err)
 	}
