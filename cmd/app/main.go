@@ -8,15 +8,15 @@ import (
 )
 
 func main() {
-	// создаем бота по токену (здесь токен заменен обычной строкой по соображениям бехопасности)
-	bot, err := tgbotapi.NewBotAPI("TOKEN")
+	// создаем бота по токену (здесь токен заменен строкой в целях безопасности)
+	bot, err := tgbotapi.NewBotAPI("5703665093:AAF_VZELQd7gZ_c_HQqcUexW8y6MC6iYyJk")
 	if err != nil {
 		log.Panic(err)
 	}
 	bot.Debug = true
 	log.Printf("Authorized on account %s", bot.Self.UserName)
 
-	// получаем апдейты ад хок и устанавливаем автоматически апдейт на 60 секунд
+	// получаем обновления
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
 
@@ -26,7 +26,7 @@ func main() {
 		log.Panic(err)
 	}
 
-	// вытаскиваем по порядку апдейты
+	// вытаскиваем по порядку обновления
 	for update := range updates {
 		log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
 		getCommand(bot, update)
@@ -51,14 +51,14 @@ func getCommand(bot *tgbotapi.BotAPI, update tgbotapi.Update) {
 
 func replyUnknowCommand(bot *tgbotapi.BotAPI, update tgbotapi.Update) {
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID,
-		"Sorry, I don't know such command :(\nChose another one")
+		"К сожалению, я не знаю такой команды :(\nПопробуйте выбрать другую")
 	msg.ReplyToMessageID = update.Message.MessageID
 	bot.Send(msg)
 }
 
 func doStart(bot *tgbotapi.BotAPI, update tgbotapi.Update) {
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID,
-		"Hello, I am your personal assistant!\nYou can chose any option from the menu and I'll do it :)")
+		"Привет, я - твой личный ассистент!\nТы можешь выбрать любую команду в меню, а я ее выполню :)")
 	bot.Send(msg)
 }
 
@@ -73,12 +73,12 @@ func doWeatherForecast(bot *tgbotapi.BotAPI, update tgbotapi.Update) {
 	degree := resp.Find(".HhSR").Last().Text()
 	feeling := resp.Find(".iO0y").Last().Text()
 	weather := fmt.Sprintf(
-		`The weather forecast for you is ready!
+		`Твой прогноз погоды готов!
 
-				• Date: %s
-				• Summary: %s
-				• Degree: %s
-				• Feels like: %s`,
+		• Дата: %s
+		• Погода: %s
+		• Градусы: %s
+		• %s`,
 		date, summary, degree, feeling)
 		
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, weather)
